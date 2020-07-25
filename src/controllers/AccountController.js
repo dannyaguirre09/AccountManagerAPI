@@ -1,9 +1,8 @@
 const Account = require('../models/Account')
 const Transaction = require('../models/Transaction');
-const { Sequelize } = require('sequelize');
 const Validation = require('../util/Validation');
 const AccountController = {};
-const sequelize = new Sequelize({ dialect:'mysql' });
+const sequelize  = require('../util/Connection');
 
 //Function to create account
 AccountController.createAccount = async (req, res) => {   
@@ -11,7 +10,8 @@ AccountController.createAccount = async (req, res) => {
     try {
         const { error } = Validation.AccountValidation(req.body);
         if(!error) {
-            const { userId, accountName, accountDescription }  = req.body;
+            const {userId} = req.user;
+            const { accountName, accountDescription }  = req.body;
             const newAccount = await Account.create({ userId, accountName, accountDescription } );
             if(newAccount) {
                 message = 'Account has been created successfully';
@@ -30,7 +30,7 @@ AccountController.createAccount = async (req, res) => {
 AccountController.getAccountByUserId = async (req, res) => {
     var message = 'An ocurreded a problem when we tried to get an accounts: ', status = 500, data = {};
     try {
-        const { userId } = req.params;
+        const { userId } = req.user;
         const accounts = await Account.findAll({ where: {  userId, status: true } })
         if(accounts.length > 0) {
             message = 'Successfully',
@@ -72,7 +72,8 @@ AccountController.editAccount = async (req, res) => {
     try {
         const { error } = Validation.EditAccountValidation(req.body);   
         if ( !error) {
-            const { accountId, userId, accountName, accountDescription } = req.body;                        
+            const{userId} = req.user;
+            const { accountId, accountName, accountDescription } = req.body;                        
             const account = await Account.findOne({ where: {accountId, userId, status:true}});
             if(account != null) {
                 const accountEdited = await Account.update({ userId, accountName, accountDescription },{where: {
@@ -96,7 +97,7 @@ AccountController.editAccount = async (req, res) => {
 //Function to delete an account
 AccountController.deleteAccount = async (req, res) => {
     var message = 'An ocurreded a problem when we tried to delete an account: ', status = 500, data = {};
-    const t = await sequelize.transaction(); 
+    const t = await sequelize .transaction(); 
     try {
         const { accountId } = req.params;
         const account = await Account.findOne({ where: {accountId, status: true } });

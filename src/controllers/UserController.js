@@ -71,7 +71,7 @@ UserController.getUserById = async(req, res) => {
     var status = 500;
     var data = {};
     try {
-        const { userId } = req.params;
+        const {userId}  = req.user;
         const user = await User.findOne({ where: { userId, status: true } }); 
         if(user) {
             message = 'User was found successfully';
@@ -86,6 +86,18 @@ UserController.getUserById = async(req, res) => {
         message = message + err;
     }
     res.status(status).json({ status, message, data });
-}
+};
 
+//Function to verify token
+UserController.verifyToken = async(req, res, next) => {
+    const token = req.header('auth-token');
+    if(!token) return res.status(401).json({status: 401, message:'Access Denied', data:[]});
+    try{
+        const verified = jwt.verify(token, 'S3CR3T4U73N71C4710N'); 
+        req.user = verified;
+        next();
+    }catch(err) {
+        return res.status(400).json({status: 400, message : err, data:[]});
+    }
+};
 module.exports = UserController;

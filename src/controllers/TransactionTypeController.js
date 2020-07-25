@@ -1,8 +1,7 @@
 const TransactionType = require('../models/TransactionType');
-const { Sequelize } = require('sequelize');
 const Transaction = require('../models/Transaction');
 const Validation = require('../util/Validation');
-const sequelize = new Sequelize({ dialect:'mysql' });
+const sequelize  = require('../util/Connection');
 const TransactionTypeController = {}
 
 //Function to create a TransactionType 

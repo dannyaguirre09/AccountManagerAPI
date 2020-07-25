@@ -4,6 +4,6 @@ const router = Router();
 
 router.post('/addUser',  UserController.createUser);
 router.post('/authenticationUser',  UserController.authenticationUser);
-router.get('/getUser/:userId', UserController.getUserById);
+router.get('/getUser/',UserController.verifyToken ,UserController.getUserById);
 
 module.exports = router;

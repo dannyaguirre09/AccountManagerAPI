@@ -25,7 +25,6 @@ Validation.LoginValidation = (data) => {
 //Account Validation
 Validation.AccountValidation = (data) => {
     const schema = Joi.object({
-        userId: Joi.number().required(),
         accountName: Joi.string().min(2).max(50).required(),
         accountDescription: Joi.string().max(100)
     });
@@ -36,7 +35,6 @@ Validation.AccountValidation = (data) => {
 Validation.EditAccountValidation = (data) => {
     const schema = Joi.object({
         accountId: Joi.number().required(),
-        userId: Joi.number().required(),
         accountName: Joi.string().min(2).max(50).required(),
         accountDescription: Joi.string().max(100)
     });

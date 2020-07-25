@@ -1,14 +1,15 @@
 const { Router } = require('express');
 const router = Router();
 const AccountController = require('../controllers/AccountController');
+const UserController = require('../controllers/UserController');
 
 // /api/accounts
 
-router.get('/getAccountsByUserId/:userId', AccountController.getAccountByUserId);
-router.get('/getAccountByAccountId/:accountId', AccountController.getAccountByAccountId);
-router.post('/addAccount', AccountController.createAccount )
-router.put('/editAccount', AccountController.editAccount);
-router.delete('/deleteAccount/:accountId', AccountController.deleteAccount);
+router.get('/getAccountsByUser/',UserController.verifyToken ,AccountController.getAccountByUserId);
+router.get('/getAccountByAccountId/:accountId',UserController.verifyToken, AccountController.getAccountByAccountId);
+router.post('/addAccount', UserController.verifyToken,AccountController.createAccount )
+router.put('/editAccount', UserController.verifyToken,AccountController.editAccount);
+router.delete('/deleteAccount/:accountId', UserController.verifyToken,AccountController.deleteAccount);
 
 
-module.exports = router;
+module.exports = router;    
